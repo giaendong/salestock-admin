@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getDress } from 'actions/dress';
+import { routeCodes } from 'constants/routes';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -22,6 +23,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 }))
 export default class Dress extends Component {
   static propTypes = {
+    history: PropTypes.object,
     error: PropTypes.string,
     loading: PropTypes.bool,
     dress: PropTypes.object,
@@ -80,6 +82,7 @@ export default class Dress extends Component {
 
   render() {
     const {
+      history,
       loading,
       error,
       dress,
@@ -102,7 +105,12 @@ export default class Dress extends Component {
                 <TableCell>Price</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>
-                  <Button variant='fab' color='primary' aria-label='Add'>
+                  <Button
+                    variant='fab'
+                    color='primary'
+                    aria-label='Add'
+                    onClick={ () => { history.push(routeCodes.DRESSCREATE); } }
+                  >
                     <AddIcon />
                   </Button>
                 </TableCell>

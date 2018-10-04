@@ -6,6 +6,7 @@ import Menu from 'components/global/Menu';
 import Home from 'views/Home';
 import People from 'views/People';
 import Dress from 'views/Dress';
+import DressCreate from 'views/DressCreate';
 import NotFound from 'views/NotFound';
 
 
@@ -20,6 +21,7 @@ class App extends Component {
             <Route exact path={ routeCodes.HOME } component={ Home } />
             <Route path={ routeCodes.PEOPLE } component={ People } />
             <Route path={ routeCodes.DRESS } component={ Dress } />
+            <Route path={ routeCodes.DRESSCREATE } component={ DressCreate } />
             <Route path='*' component={ NotFound } />
           </Switch>
         </div>

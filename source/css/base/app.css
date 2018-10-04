@@ -193,5 +193,7 @@ hr {
 }
 
 .loadmore-button {
-  margin: 0 auto;  
+  position: relative;
+  left: calc(50% - 30px);
+  top: 10px;
 }

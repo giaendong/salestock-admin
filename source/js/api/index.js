@@ -123,7 +123,23 @@ function getDress(page) {
   });
 }
 
+function createDress(data) {
+  return fetch(`${ API_URL }/dress`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return false;
+  });
+}
+
 export default {
   getPeople,
   getDress,
+  createDress,
 };

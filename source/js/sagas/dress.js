@@ -5,6 +5,10 @@ import {
   GET_DRESS_START,
   GET_DRESS_ERROR,
   GET_DRESS_SUCCESS,
+
+  CREATE_DRESS_START,
+  CREATE_DRESS_ERROR,
+  CREATE_DRESS_SUCCESS,
 } from 'actions/dress';
 
 // -------- Get all dress
@@ -27,7 +31,25 @@ function* watchGetDress() {
   }
 }
 
+function* createDress(data) {
+  try {
+    const res = yield call(api.createDress, data);
+    const action = { type: CREATE_DRESS_SUCCESS, res };
+    yield put(action);
+  } catch (e) {
+    yield put({ type: CREATE_DRESS_ERROR, e });
+  }
+}
+
+function* watchCreateDress() {
+  while (true) {
+    const { data } = yield take(CREATE_DRESS_START);
+    yield* createDress(data);
+  }
+}
+
 
 export default function* dressSagas() {
   yield fork(watchGetDress);
+  yield fork(watchCreateDress);
 }
