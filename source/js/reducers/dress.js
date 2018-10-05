@@ -4,6 +4,7 @@ import {
   GET_DRESS_START,
   GET_DRESS_ERROR,
   GET_DRESS_SUCCESS,
+  GET_DRESS_EMPTY,
 
   CREATE_DRESS_START,
   CREATE_DRESS_ERROR,
@@ -14,10 +15,11 @@ const initialState = Map({
   loading: false,
   error: null,
   dress: null,
+  dressEmpty: false,
 
   createLoading: false,
-  createError: null,
-  createSuccess: null,
+  createError: false,
+  createSuccess: false,
 });
 
 const actionsMap = {
@@ -27,37 +29,46 @@ const actionsMap = {
       loading: true,
       error: null,
       dress: null,
+      dressEmpty: false,
     }));
   },
   [GET_DRESS_ERROR]: (state, action) => {
     return state.merge(Map({
       loading: false,
       error: action.error,
+      dressEmpty: false,
     }));
   },
   [GET_DRESS_SUCCESS]: (state, action) => {
     return state.merge(Map({
       loading: false,
       dress: action.data,
+      dressEmpty: false,
+    }));
+  },
+  [GET_DRESS_EMPTY]: (state) => {
+    return state.merge(Map({
+      loading: false,
+      dressEmpty: true,
     }));
   },
   [CREATE_DRESS_START]: (state) => {
     return state.merge(Map({
       createLoading: true,
-      createError: null,
-      createSuccess: null,
+      createError: false,
+      createSuccess: false,
     }));
   },
-  [CREATE_DRESS_ERROR]: (state, action) => {
+  [CREATE_DRESS_ERROR]: (state) => {
     return state.merge(Map({
       createLoading: false,
-      createError: action.error,
+      createError: true,
     }));
   },
-  [CREATE_DRESS_SUCCESS]: (state, action) => {
+  [CREATE_DRESS_SUCCESS]: (state) => {
     return state.merge(Map({
       createLoading: false,
-      createSuccess: action.data,
+      createSuccess: true,
     }));
   },
 };

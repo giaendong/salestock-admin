@@ -110,7 +110,7 @@ function getPeople() {
 }
 
 function getDress(page) {
-  return fetch(`${ API_URL }/dress?limit=1&page=${ page }`, {
+  return fetch(`${ API_URL }/dress?limit=5&page=${ page }`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -124,15 +124,16 @@ function getDress(page) {
 }
 
 function createDress(data) {
+  const body = JSON.stringify(data);
   return fetch(`${ API_URL }/dress`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: data,
+    body,
   }).then((response) => {
     if (response.ok) {
-      return response.json();
+      return true;
     }
     return false;
   });

@@ -22,9 +22,9 @@ import { createDress } from '../actions/dress';
 }))
 export default class DressCreate extends Component {
   static propTypes = {
-    createError: PropTypes.object,
+    createError: PropTypes.bool,
     createLoading: PropTypes.bool,
-    createSuccess: PropTypes.object,
+    createSuccess: PropTypes.bool,
     // from react-redux connect
     dispatch: PropTypes.func,
   }
@@ -39,8 +39,10 @@ export default class DressCreate extends Component {
       size: ['L', 'XL'],
       retrn: false,
       trying: false,
-      image: 'https://firebasestorage.googleapis.com/v0/b/salestock-sample.appspot.com/o/ddcf5cb966d076d429e600f09bfb7013.jpg?alt=media&token=d5508c4d-39c7-4924-bd0b-9b185e8ee2e6',
+      image:
+      'https://firebasestorage.googleapis.com/v0/b/salestock-sample.appspot.com/o/ddcf5cb966d076d429e600f09bfb7013.jpg?alt=media&token=d5508c4d-39c7-4924-bd0b-9b185e8ee2e6',
       ingredient: '',
+      bs: false,
     };
     this.handleName = this.handleName.bind(this);
     this.handleType = this.handleType.bind(this);
@@ -51,6 +53,7 @@ export default class DressCreate extends Component {
     this.handleTry = this.handleTry.bind(this);
     this.handleImage = this.handleImage.bind(this);
     this.handleIngredient = this.handleIngredient.bind(this);
+    this.handleBS = this.handleBS.bind(this);
     this.create = this.create.bind(this);
   }
 
@@ -81,10 +84,13 @@ export default class DressCreate extends Component {
   handleIngredient(e) {
     this.setState({ ingredient: e.target.value });
   }
+  handleBS(e) {
+    this.setState({ bs: e.target.value });
+  }
   create() {
     const { dispatch } = this.props;
     const {
-      name, type, price, color, retrn, trying, ingredient, image, size,
+      name, type, price, color, retrn, trying, ingredient, image, size, bs,
     } = this.state;
     const date = moment().format('MMMM Do YYYY, h:mm:ss a');
     const body = {
@@ -98,6 +104,7 @@ export default class DressCreate extends Component {
       product_type: type,
       return: retrn,
       try_before_purchase: trying,
+      best_seller: bs,
     };
     dispatch(createDress(body));
   }
@@ -167,14 +174,14 @@ export default class DressCreate extends Component {
           />
         </FormGroup>
         {
-          !createLoading && !createSuccess && !createError ?
-            <Button variant='contained' color='primary' onClick={ this.create }>
+          createLoading || createSuccess || createError ? null :
+          <Button variant='contained' color='primary' onClick={ this.create }>
             CREATE DRESS
-            </Button> : null
+          </Button>
         }
         { createLoading ? <CircularProgress className='loading-circle' color='secondary' /> : null }
-        { createSuccess ? <Button disabled> SUCCESS </Button> : null }
-        { createError ? <Button disabled> FAILED </Button> : null }
+        { createSuccess ? 'SUCCESS' : null }
+        { createError ? 'FAILED' : null }
       </FormControl>
     );
   }

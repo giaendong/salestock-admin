@@ -20,6 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
   error: state.dress.get('error'),
   loading: state.dress.get('loading'),
   dress: state.dress.get('dress'),
+  dressEmpty: state.dress.get('dressEmpty'),
 }))
 export default class Dress extends Component {
   static propTypes = {
@@ -27,6 +28,7 @@ export default class Dress extends Component {
     error: PropTypes.string,
     loading: PropTypes.bool,
     dress: PropTypes.object,
+    dressEmpty: PropTypes.bool,
     // from react-redux connect
     dispatch: PropTypes.func,
   }
@@ -70,7 +72,7 @@ export default class Dress extends Component {
         <TableCell>{dress[item].created_date}</TableCell>
         <TableCell>{dress[item].product_type}</TableCell>
         <TableCell>{dress[item].price}</TableCell>
-        <TableCell>{dress[item].best_seller ? 'Best Seller' : null}</TableCell>
+        <TableCell>{dress[item].best_seller ? 'Best Seller' : 'Normal'}</TableCell>
         <TableCell>
           <Button variant='outlined' size='small' color='primary'>
               Edit
@@ -86,6 +88,7 @@ export default class Dress extends Component {
       loading,
       error,
       dress,
+      dressEmpty,
     } = this.props;
     const { arr } = this.state;
 
@@ -128,8 +131,10 @@ export default class Dress extends Component {
           </Table>
           {loading ? <CircularProgress className='loading-circle' color='secondary' /> : null}
         </Paper>
-        {dress || !loading ?
-          <Button className='loadmore-button' variant='outlined' onClick={ this.loadMore }>More</Button> : null}
+        { dressEmpty || loading ? null :
+        <Button className='loadmore-button' variant='outlined' onClick={ this.loadMore }>More</Button>}
+        { dressEmpty ?
+          <Button className='loadmore-button'>Last Item Reached</Button> : null}
       </div>
     );
   }

@@ -5,6 +5,7 @@ import {
   GET_DRESS_START,
   GET_DRESS_ERROR,
   GET_DRESS_SUCCESS,
+  GET_DRESS_EMPTY,
 
   CREATE_DRESS_START,
   CREATE_DRESS_ERROR,
@@ -17,8 +18,11 @@ function* getDress(page) {
   try {
     const raw = yield call(api.getDress, page);
     const data = raw.dress;
-    const action = { type: GET_DRESS_SUCCESS, data };
-    yield put(action);
+    if (Object.keys(data).length === 0) {
+      yield put({ type: GET_DRESS_EMPTY });
+    } else {
+      yield put({ type: GET_DRESS_SUCCESS, data });
+    }
   } catch (e) {
     yield put({ type: GET_DRESS_ERROR, e });
   }
