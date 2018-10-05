@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getDress } from 'actions/dress';
+import { getDress, deleteDress } from 'actions/dress';
 import { routeCodes } from 'constants/routes';
 
 import Table from '@material-ui/core/Table';
@@ -13,7 +13,10 @@ import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 @connect(state => ({
@@ -21,6 +24,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
   loading: state.dress.get('loading'),
   dress: state.dress.get('dress'),
   dressEmpty: state.dress.get('dressEmpty'),
+
+  deleteLoading: state.dress.get('deleteLoading'),
+  deleteError: state.dress.get('deleteError'),
+  deleteSuccess: state.dress.get('deleteSuccess'),
 }))
 export default class Dress extends Component {
   static propTypes = {
@@ -29,6 +36,9 @@ export default class Dress extends Component {
     loading: PropTypes.bool,
     dress: PropTypes.object,
     dressEmpty: PropTypes.bool,
+    // deleteLoading: PropTypes.bool,
+    deleteError: PropTypes.bool,
+    deleteSuccess: PropTypes.bool,
     // from react-redux connect
     dispatch: PropTypes.func,
   }
@@ -40,11 +50,25 @@ export default class Dress extends Component {
       arr: {},
     };
     this.loadMore = this.loadMore.bind(this);
+    this.delete = this.delete.bind(this);
+    this.reload = this.reload.bind(this);
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(getDress('1'));
+  }
+
+  componentDidUpdate(prevProps) {
+    const { deleteSuccess, deleteError } = this.props;
+    if (deleteSuccess !== prevProps.deleteSuccess && deleteSuccess) {
+      this.reload();
+    }
+    if (deleteError !== prevProps.deleteError && deleteError) {
+      /* eslint-disable no-alert */
+      window.alert('Delete Item Failed');
+      /* eslint-enable no-alert */
+    }
   }
 
   loadMore() {
@@ -56,6 +80,27 @@ export default class Dress extends Component {
       arr: newArr,
     });
     dispatch(getDress(next.toString()));
+  }
+
+  reload() {
+    const { dispatch } = this.props;
+    this.setState({
+      page: 1,
+      arr: {},
+    });
+    dispatch(getDress('1'));
+  }
+
+  delete(e) {
+    const { dispatch } = this.props;
+    if (e.target.id) {
+      /* eslint-disable no-alert */
+      const confirmation = window.confirm(`Delete Item ${ e.target.name }`);
+      /* eslint-enable no-alert */
+      if (confirmation) {
+        dispatch(deleteDress(e.target.id));
+      }
+    }
   }
 
   renderDress(item, dress) {
@@ -77,6 +122,9 @@ export default class Dress extends Component {
           <Button variant='outlined' size='small' color='primary'>
               Edit
           </Button>
+          <IconButton aria-label='Delete' id={ item } name={ dress[item].product_name } onClick={ this.delete }>
+            <DeleteIcon fontSize='small' />
+          </IconButton>
         </TableCell>
       </TableRow>
     );
@@ -89,6 +137,7 @@ export default class Dress extends Component {
       error,
       dress,
       dressEmpty,
+      deleteSuccess,
     } = this.props;
     const { arr } = this.state;
 
@@ -129,12 +178,24 @@ export default class Dress extends Component {
               {error ? <TableRow><TableCell>Something Wrong</TableCell></TableRow> : null}
             </TableBody>
           </Table>
-          {loading ? <CircularProgress className='loading-circle' color='secondary' /> : null}
+          {
+            loading ? <CircularProgress className='loading-circle' color='secondary' /> : null
+            }
         </Paper>
-        { dressEmpty || loading ? null :
-        <Button className='loadmore-button' variant='outlined' onClick={ this.loadMore }>More</Button>}
-        { dressEmpty ?
-          <Button className='loadmore-button'>Last Item Reached</Button> : null}
+        {
+          dressEmpty || loading ? null :
+          <Button className='loadmore-button' variant='outlined' onClick={ this.loadMore }>More</Button>
+        }
+        { dressEmpty ? <Button className='loadmore-button'>Last Item Reached</Button> : null }
+        <Snackbar
+          anchorOrigin={ {
+            vertical: 'bottom',
+            horizontal: 'left',
+          } }
+          open={ deleteSuccess }
+          autoHideDuration={ 6000 }
+          message={ <span id='message-id'>Delete Successful</span> }
+        />
       </div>
     );
   }

@@ -9,6 +9,10 @@ import {
   CREATE_DRESS_START,
   CREATE_DRESS_ERROR,
   CREATE_DRESS_SUCCESS,
+
+  DELETE_DRESS_START,
+  DELETE_DRESS_ERROR,
+  DELETE_DRESS_SUCCESS,
 } from 'actions/dress';
 
 const initialState = Map({
@@ -20,6 +24,10 @@ const initialState = Map({
   createLoading: false,
   createError: false,
   createSuccess: false,
+
+  deleteLoading: false,
+  deleteError: false,
+  deleteSuccess: false,
 });
 
 const actionsMap = {
@@ -44,6 +52,14 @@ const actionsMap = {
       loading: false,
       dress: action.data,
       dressEmpty: false,
+      
+      createLoading: false,
+      createError: false,
+      createSuccess: false,
+
+      deleteLoading: false,
+      deleteError: false,
+      deleteSuccess: false,
     }));
   },
   [GET_DRESS_EMPTY]: (state) => {
@@ -69,6 +85,25 @@ const actionsMap = {
     return state.merge(Map({
       createLoading: false,
       createSuccess: true,
+    }));
+  },
+  [DELETE_DRESS_START]: (state) => {
+    return state.merge(Map({
+      deleteLoading: true,
+      deleteError: false,
+      deleteSuccess: false,
+    }));
+  },
+  [DELETE_DRESS_ERROR]: (state) => {
+    return state.merge(Map({
+      deleteLoading: false,
+      deleteError: true,
+    }));
+  },
+  [DELETE_DRESS_SUCCESS]: (state) => {
+    return state.merge(Map({
+      deleteLoading: false,
+      deleteSuccess: true,
     }));
   },
 };

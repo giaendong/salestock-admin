@@ -10,6 +10,10 @@ import {
   CREATE_DRESS_START,
   CREATE_DRESS_ERROR,
   CREATE_DRESS_SUCCESS,
+
+  DELETE_DRESS_START,
+  DELETE_DRESS_ERROR,
+  DELETE_DRESS_SUCCESS,
 } from 'actions/dress';
 
 // -------- Get all dress
@@ -52,8 +56,25 @@ function* watchCreateDress() {
   }
 }
 
+function* deleteDress(id) {
+  try {
+    const res = yield call(api.deleteDress, id);
+    const action = { type: DELETE_DRESS_SUCCESS, res };
+    yield put(action);
+  } catch (e) {
+    yield put({ type: DELETE_DRESS_ERROR, e });
+  }
+}
+
+function* watchDeleteDress() {
+  while (true) {
+    const { id } = yield take(DELETE_DRESS_START);
+    yield* deleteDress(id);
+  }
+}
 
 export default function* dressSagas() {
   yield fork(watchGetDress);
   yield fork(watchCreateDress);
+  yield fork(watchDeleteDress);
 }

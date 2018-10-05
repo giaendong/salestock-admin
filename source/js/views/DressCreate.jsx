@@ -180,8 +180,8 @@ export default class DressCreate extends Component {
           </Button>
         }
         { createLoading ? <CircularProgress className='loading-circle' color='secondary' /> : null }
-        { createSuccess ? 'SUCCESS' : null }
-        { createError ? 'FAILED' : null }
+        { createSuccess ? <Button>SUCCESS</Button> : null }
+        { createError ? <Button>SUCCESS</Button> : null }
       </FormControl>
     );
   }

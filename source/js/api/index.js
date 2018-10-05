@@ -139,8 +139,23 @@ function createDress(data) {
   });
 }
 
+function deleteDress(id) {
+  return fetch(`${ API_URL }/dress/${ id }`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return true;
+    }
+    return false;
+  });
+}
+
 export default {
   getPeople,
   getDress,
   createDress,
+  deleteDress,
 };
